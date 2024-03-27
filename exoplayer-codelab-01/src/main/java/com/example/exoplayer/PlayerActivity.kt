@@ -69,13 +69,13 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         Log.d("MARCIN_W", "START");
 
         start()
-//        GlobalScope.launch(Dispatchers.Main) {
-//
-//            delay(5000)
-//            i.pause()
-//            delay(10000)
-//            i.resume()
-//        }
+        GlobalScope.launch(Dispatchers.Main) {
+
+            delay(5000)
+            i.pause()
+            delay(10000)
+            i.resume()
+        }
 //        GlobalScope.launch(Dispatchers.Main) {
 //            delay(13000)
 //            Toast.makeText(activity, "HEjj", Toast.LENGTH_LONG).show();
@@ -101,7 +101,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     }
 
     fun start() {
-        // i.start()
+        i.start()
         timerIsWorking = true
         GlobalScope.launch(Dispatchers.Main) {
             while (true) {
@@ -123,12 +123,24 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
     public override fun onResume() {
         super.onResume()
+        Log.d("MARCIN_W", "resumeeee 2222222");
+
         hideSystemUi()
+        Log.d("MARCIN_W", "resumeeee 33333333");
+
         if (Build.VERSION.SDK_INT <= 23 || player == null) {
             initializePlayer()
+            Log.d("MARCIN_W", "resumeeee 444444");
+
         }
+        Log.d("MARCIN_W", "resumeeee 55555555");
+
         i.resume()
+        Log.d("MARCIN_W", "resumeeee 666666666");
+
         timerIsWorking = true
+        Log.d("MARCIN_W", "resumeeee 111111");
+
     }
 
     public override fun onPause() {
@@ -206,7 +218,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
     override fun second(seconds: Int) {
         Log.d("MARCIN_W", "second: $seconds");
-        // time.text = "" + seconds
+        time.text = "" + seconds
     }
 
     override fun pause() {
