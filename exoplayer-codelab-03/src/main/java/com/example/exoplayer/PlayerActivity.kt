@@ -90,7 +90,8 @@ class PlayerActivity : AppCompatActivity() {
                         .build()
 
                 val mediaItem = MediaItem.Builder()
-                    .setUri(getString(R.string.media_url_dash))
+                //    .setUri(getString(R.string.media_url_dash))
+                    .setUri("file:///storage/emulated/0/workout/internet.mp4")
                     .setMimeType(MimeTypes.APPLICATION_MPD)
                     .build()
                 exoPlayer.setMediaItems(listOf(mediaItem), mediaItemIndex, playbackPosition)

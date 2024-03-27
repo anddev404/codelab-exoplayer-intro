@@ -16,35 +16,102 @@
 package com.example.exoplayer
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.exoplayer.databinding.ActivityPlayerBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@UnstableApi
 /**
  * A fullscreen activity to play audio or video streams.
  */
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         ActivityPlayerBinding.inflate(layoutInflater)
     }
 
     private var player: Player? = null
+    private var activity: Activity = this
+    val i = ItemPlayer(playerInterface = this)
 
     private var playWhenReady = true
     private var mediaItemIndex = 0
     private var playbackPosition = 0L
+    private lateinit var time: TextView
+    private lateinit var time_all: TextView
+    private var timerIsWorking = false
+    private var timer = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+        time = findViewById(R.id.time)
+        time_all = findViewById(R.id.time_all)
+
+        Log.d("MARCIN_W", "START");
+
+        start()
+//        GlobalScope.launch(Dispatchers.Main) {
+//
+//            delay(5000)
+//            i.pause()
+//            delay(10000)
+//            i.resume()
+//        }
+//        GlobalScope.launch(Dispatchers.Main) {
+//            delay(13000)
+//            Toast.makeText(activity, "HEjj", Toast.LENGTH_LONG).show();
+//            //  player?.repeatMode = Player.REPEAT_MODE_ALL
+//
+//
+////            var qwe2 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
+////            val mediaItem2 =
+////                MediaItem.fromUri(qwe2)
+////
+////            player?.setMediaItems(
+////                listOf(mediaItem2),
+////                mediaItemIndex,
+////                playbackPosition
+////            )
+////            player?.prepare()
+////            player?.playWhenReady = playWhenReady
+//            player?.pause()
+//            delay(3000)
+//            player?.play()
+//            
+//        }
+    }
+
+    fun start() {
+        // i.start()
+        timerIsWorking = true
+        GlobalScope.launch(Dispatchers.Main) {
+            while (true) {
+                delay(1000)
+                if (timerIsWorking) {
+                    timer++
+                    time_all.text = "" + timer
+                }
+            }
+        }
     }
 
     public override fun onStart() {
@@ -60,6 +127,8 @@ class PlayerActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT <= 23 || player == null) {
             initializePlayer()
         }
+        i.resume()
+        timerIsWorking = true
     }
 
     public override fun onPause() {
@@ -67,6 +136,8 @@ class PlayerActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT <= 23) {
             releasePlayer()
         }
+        i.pause()
+        timerIsWorking = false
     }
 
     public override fun onStop() {
@@ -78,16 +149,27 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun initializePlayer() {
         // ExoPlayer implements the Player interface
-        player = ExoPlayer.Builder(this)
-            .build()
-            .also { exoPlayer ->
-                viewBinding.videoView.player = exoPlayer
+        player = ExoPlayer.Builder(this).build().also { exoPlayer ->
+            viewBinding.videoView.player = exoPlayer
 
-                val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
-                exoPlayer.setMediaItems(listOf(mediaItem), mediaItemIndex, playbackPosition)
-                exoPlayer.playWhenReady = playWhenReady
-                exoPlayer.prepare()
-            }
+            var qwe1 = RawResourceDataSource.buildRawResourceUri(R.raw.youtube)
+            var qwe2 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
+
+            exoPlayer.videoScalingMode
+            //  val mediaItem = MediaItem.fromUri(pattt)
+            val mediaItem1 = MediaItem.fromUri(qwe1)
+            val mediaItem2 = MediaItem.fromUri(qwe2)
+
+//                val basePath = Environment.getExternalStorageDirectory().absolutePath
+//                val filePath = "file://$basePath/workout/internet.mp4"
+//                val mediaItem = MediaItem.fromUri(filePath)
+            exoPlayer.setMediaItems(
+                listOf(mediaItem1, mediaItem2), mediaItemIndex, playbackPosition
+            )
+//                exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+//                exoPlayer.playWhenReady = playWhenReady
+//                exoPlayer.prepare()
+        }
     }
 
     private fun releasePlayer() {
@@ -108,5 +190,30 @@ class PlayerActivity : AppCompatActivity() {
             controller.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+    }
+
+    override fun startPlayer() {
+        Log.d("MARCIN_W", "start player");
+    }
+
+    override fun nextItem(item: Item) {
+        Log.d("MARCIN_W", "start item");
+    }
+
+    override fun endPlayer() {
+        Log.d("MARCIN_W", "end player");
+    }
+
+    override fun second(seconds: Int) {
+        Log.d("MARCIN_W", "second: $seconds");
+        // time.text = "" + seconds
+    }
+
+    override fun pause() {
+        Log.d("MARCIN_W", "paused");
+    }
+
+    override fun resume() {
+        Log.d("MARCIN_W", "resumed");
     }
 }

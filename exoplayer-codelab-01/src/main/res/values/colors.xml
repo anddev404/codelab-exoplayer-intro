@@ -16,4 +16,7 @@ limitations under the License. -->
   <color name="colorPrimary">#FFFFFF</color>
   <color name="colorPrimaryDark">#000000</color>
   <color name="colorAccent">#FF4081</color>
+  <color name="text_color">#FFEB3B</color>
+  <color name="gray">#03A9F4</color>
+
 </resources>
