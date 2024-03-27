@@ -97,15 +97,6 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         timerIsWorking = true
         i.start()
 
-//        GlobalScope.launch(Dispatchers.Main) {
-//            while (true) {
-//                delay(1000)
-//                if (timerIsWorking) {
-//                    timer++
-//                    time_all.text = "" + timer
-//                }
-//            }
-//        }
     }
 
     public override fun onStart() {
@@ -113,6 +104,12 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         if (Build.VERSION.SDK_INT > 23) {
             initializePlayer()
         }
+    }
+
+    fun secondsToMinutesAndSeconds(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format("%d:%02d", minutes, remainingSeconds)
     }
 
     public override fun onResume() {
@@ -215,8 +212,9 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
     override fun second(seconds: Int, secondAll: Int, secondAllAll: Int) {
         Log.d("MARCIN_W", "second: $seconds / $secondAll");
-        time.text = "" + "${seconds} / ${secondAll}"
-        time_all.text = "" + secondAllAll
+        time.text =
+            "" + "${secondsToMinutesAndSeconds(seconds)}\n${secondsToMinutesAndSeconds(secondAll)}"
+        time_all.text = "" + secondsToMinutesAndSeconds(secondAllAll)
 
     }
 

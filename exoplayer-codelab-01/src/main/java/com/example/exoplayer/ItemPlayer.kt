@@ -26,8 +26,8 @@ class ItemPlayer(
             for (item in items) {
                 playerInterface.nextItem(item)
                 for (i in 0..item.timeInSec) {
-                    timer++
                     playerInterface.second(i, item.timeInSec, timer)
+                    timer++
                     while (isPaused) {
 
                     }
