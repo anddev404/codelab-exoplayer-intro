@@ -58,6 +58,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private var playbackPosition = 0L
     private lateinit var time: TextView
     private lateinit var time_all: TextView
+    private lateinit var header: TextView
+
     private lateinit var startButton: Button
     private lateinit var pauseButton: Button
     private var timerIsWorking = false
@@ -68,6 +70,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         setContentView(viewBinding.root)
         time = findViewById(R.id.time)
         time_all = findViewById(R.id.time_all)
+        header = findViewById(R.id.header)
+
         startButton = findViewById(R.id.start)
         pauseButton = findViewById(R.id.pause)
         startButton.setOnClickListener {
@@ -90,17 +94,18 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     }
 
     fun start() {
-        i.start()
         timerIsWorking = true
-        GlobalScope.launch(Dispatchers.Main) {
-            while (true) {
-                delay(1000)
-                if (timerIsWorking) {
-                    timer++
-                    time_all.text = "" + timer
-                }
-            }
-        }
+        i.start()
+
+//        GlobalScope.launch(Dispatchers.Main) {
+//            while (true) {
+//                delay(1000)
+//                if (timerIsWorking) {
+//                    timer++
+//                    time_all.text = "" + timer
+//                }
+//            }
+//        }
     }
 
     public override fun onStart() {
@@ -199,15 +204,20 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
     override fun nextItem(item: Item) {
         Log.d("MARCIN_W", "start item");
+        header.text = item.name
     }
 
     override fun endPlayer() {
         Log.d("MARCIN_W", "end player");
+        i.pause()
+        timerIsWorking = false
     }
 
-    override fun second(seconds: Int) {
-        Log.d("MARCIN_W", "second: $seconds");
-        time.text = "" + seconds
+    override fun second(seconds: Int, secondAll: Int, secondAllAll: Int) {
+        Log.d("MARCIN_W", "second: $seconds / $secondAll");
+        time.text = "" + "${seconds} / ${secondAll}"
+        time_all.text = "" + secondAllAll
+
     }
 
     override fun pause() {

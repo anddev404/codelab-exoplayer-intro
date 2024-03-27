@@ -1,10 +1,15 @@
 package com.example.exoplayer
 
-class Item(val timeInSec: Int) {//dodac scale dla wideo
+class Item(val name: String = "", val timeInSec: Int, resource: Int? = null) {
 
     companion object {
         fun getExampleItem(): List<Item> {
-            return arrayListOf<Item>(Item(10), Item(10), Item(11), Item(7))
+            return arrayListOf<Item>(
+                Item("jeden", 10),
+                Item("dwa", 10),
+                Item("trzy", 11),
+                Item("cztery", 7)
+            )
         }
     }
 }

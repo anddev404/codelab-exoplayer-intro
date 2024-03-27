@@ -6,7 +6,7 @@ interface PlayerInterface {
     fun nextItem(item: Item)
     fun endPlayer()
 
-    fun second(seconds: Int)
+    fun second(seconds: Int, secondAll: Int, secondAllAll: Int)
 
     fun pause()
     fun resume()

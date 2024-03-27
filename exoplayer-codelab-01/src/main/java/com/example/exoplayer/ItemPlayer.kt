@@ -12,23 +12,29 @@ class ItemPlayer(
     private val playerInterface: PlayerInterface
 ) {
     private var isPaused = false
+    private var isStarted = false
+    private var timer = 0
+
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     //   val mutex = Mutex(locked = false)
 
     fun start() {
+        if (isStarted) return
+        isStarted = true
         coroutineScope.launch() {
             playerInterface.startPlayer()
             for (item in items) {
                 playerInterface.nextItem(item)
                 for (i in 0..item.timeInSec) {
-
-                    playerInterface.second(i)
+                    timer++
+                    playerInterface.second(i, item.timeInSec, timer)
                     while (isPaused) {
 
                     }
                     delay(1000)
                 }
             }
+            isStarted = false
             playerInterface.endPlayer()
 
         }
