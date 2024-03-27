@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +58,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private var playbackPosition = 0L
     private lateinit var time: TextView
     private lateinit var time_all: TextView
+    private lateinit var startButton: Button
+    private lateinit var pauseButton: Button
     private var timerIsWorking = false
     private var timer = 0
 
@@ -65,39 +68,25 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         setContentView(viewBinding.root)
         time = findViewById(R.id.time)
         time_all = findViewById(R.id.time_all)
-
-        Log.d("MARCIN_W", "START");
-
-        start()
-        GlobalScope.launch(Dispatchers.Main) {
-
-            delay(5000)
-            i.pause()
-            delay(10000)
-            i.resume()
+        startButton = findViewById(R.id.start)
+        pauseButton = findViewById(R.id.pause)
+        startButton.setOnClickListener {
+            start()
         }
-//        GlobalScope.launch(Dispatchers.Main) {
-//            delay(13000)
-//            Toast.makeText(activity, "HEjj", Toast.LENGTH_LONG).show();
-//            //  player?.repeatMode = Player.REPEAT_MODE_ALL
-//
-//
-////            var qwe2 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
-////            val mediaItem2 =
-////                MediaItem.fromUri(qwe2)
-////
-////            player?.setMediaItems(
-////                listOf(mediaItem2),
-////                mediaItemIndex,
-////                playbackPosition
-////            )
-////            player?.prepare()
-////            player?.playWhenReady = playWhenReady
-//            player?.pause()
-//            delay(3000)
-//            player?.play()
-//            
-//        }
+        pauseButton.setOnClickListener {
+            if (timerIsWorking) {
+                i.pause()
+                timerIsWorking = false
+                pauseButton.text = "RESUME"
+            } else {
+                i.resume()
+                timerIsWorking = true
+                pauseButton.text = "PAUSE"
+
+            }
+
+        }
+        Log.d("MARCIN_W", "START");
     }
 
     fun start() {
@@ -178,9 +167,9 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
             exoPlayer.setMediaItems(
                 listOf(mediaItem1, mediaItem2), mediaItemIndex, playbackPosition
             )
-//                exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+            exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 //                exoPlayer.playWhenReady = playWhenReady
-//                exoPlayer.prepare()
+            exoPlayer.prepare()
         }
     }
 

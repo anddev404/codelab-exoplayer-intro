@@ -12,7 +12,7 @@ class ItemPlayer(
     private val playerInterface: PlayerInterface
 ) {
     private var isPaused = false
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     //   val mutex = Mutex(locked = false)
 
     fun start() {
