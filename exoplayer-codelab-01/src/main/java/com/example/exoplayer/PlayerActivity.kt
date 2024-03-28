@@ -97,12 +97,21 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         header = findViewById(R.id.header)
         header.text = i.description
         left.setOnClickListener {
-            i.leftSet()
-            header.text = i.description
+            if (timerIsWorking) {
+                i.moveToNextItem()
+            } else {
+                i.leftSet()
+                header.text = i.description
+            }
+
         }
         right.setOnClickListener {
-            i.rightSet()
-            header.text = i.description
+            if (timerIsWorking) {
+                i.moveToNextItem()
+            } else {
+                i.rightSet()
+                header.text = i.description
+            }
         }
         time_break = findViewById(R.id.time_break)
         time_break.visibility = View.INVISIBLE

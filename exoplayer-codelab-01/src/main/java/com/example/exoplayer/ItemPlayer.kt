@@ -40,18 +40,36 @@ class ItemPlayer(
 
 
                 for (x in 0..item.timeInSec) {
+                    if (goToNextItem) {
+                        goToNextItem = false
+                        break
+                    }
                     playerInterface.second(item.timeInSec - x, item.timeInSec, timer)
                     timer++
                     while (isPaused) {
 
                     }
+                    if (goToNextItem) {
+                        goToNextItem = false
+                        break
+                    }
                     delay(1000)
+                    if (goToNextItem) {
+                        goToNextItem = false
+                        break
+                    }
                 }
             }
             isStarted = false
             playerInterface.endPlayer()
 
         }
+    }
+
+    private var goToNextItem = false
+
+    fun moveToNextItem() {
+        goToNextItem = true
     }
 
     fun pause() {
