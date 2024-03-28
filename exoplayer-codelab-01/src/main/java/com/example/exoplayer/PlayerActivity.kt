@@ -177,7 +177,10 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         if (Build.VERSION.SDK_INT <= 23) {
             // releasePlayer()
         }
-        pauseButton.performClick()
+        if(timerIsWorking){
+            pauseButton.performClick()
+
+        }
         // i.pause()
         // timerIsWorking = false
         //    pauseButton.performClick()
