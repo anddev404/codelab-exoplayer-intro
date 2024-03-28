@@ -74,7 +74,6 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private lateinit var startButton: Button
     private lateinit var pauseButton: Button
     private var timerIsWorking = false
-    private var timer = 0
 
     //endregion
 
@@ -97,9 +96,15 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         header = findViewById(R.id.header)
         header.text = i.description
         left.setOnClickListener {
+            Log.d("MARCIN_WWW", "left");
+
             if (timerIsWorking) {
+                Log.d("MARCIN_WWW", "nextitem");
+
                 i.moveToNextItem()
             } else {
+                Log.d("MARCIN_WWW", "set left");
+
                 i.leftSet()
                 header.text = i.description
                 totalTime = i.getTotalTime()
@@ -108,9 +113,14 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
         }
         right.setOnClickListener {
+            Log.d("MARCIN_WWW", "right");
+
             if (timerIsWorking) {
+                Log.d("MARCIN_WWW", "nextitem");
                 i.moveToNextItem()
             } else {
+                Log.d("MARCIN_WWW", "set right");
+
                 i.rightSet()
                 header.text = i.description
                 totalTime = i.getTotalTime()
@@ -166,7 +176,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         // i.resume()
         Log.d("MARCIN_W", "resumeeee 666666666");
 
-        timerIsWorking = true
+        //timerIsWorking = true
         Log.d("MARCIN_W", "resumeeee 111111");
 
     }
@@ -206,32 +216,6 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
             exoPlayer.prepare()
         }
     }
-
-//    private fun initializePlayer() {
-//        // ExoPlayer implements the Player interface
-//        player = ExoPlayer.Builder(this).build().also { exoPlayer ->
-//            viewBinding.videoView.player = exoPlayer
-//
-//            var qwe1 = RawResourceDataSource.buildRawResourceUri(R.raw.youtube)
-//            var qwe2 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
-//            var qwe3 = RawResourceDataSource.buildRawResourceUri(R.raw.youtube)
-//            var qwe4 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
-//            exoPlayer.videoScalingMode
-//            //  val mediaItem = MediaItem.fromUri(pattt)
-//            val mediaItem1 = MediaItem.fromUri(qwe1)
-//            val mediaItem2 = MediaItem.fromUri(qwe2)
-//            val mediaItem3 = MediaItem.fromUri(qwe3)
-//            val mediaItem4 = MediaItem.fromUri(qwe4)
-//            exoPlayer.setMediaItems(
-//                listOf(mediaItem1, mediaItem2, mediaItem3, mediaItem4),
-//                mediaItemIndex,
-//                playbackPosition
-//            )
-//            exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
-//            // exoPlayer.playWhenReady = playWhenReady
-//            exoPlayer.prepare()
-//        }
-//    }
 
     override fun nextItem(item: Item) {
         if (item.type is Break) {
