@@ -29,6 +29,15 @@ class ItemPlayer(
         description = item.second
     }
 
+    fun getTotalTime(): Int {
+        var time = 0
+        for (i in items.first) {
+            time = time + i.timeInSec
+        }
+
+        return time
+    }
+
     fun start() {
         if (isStarted) return
         isStarted = true

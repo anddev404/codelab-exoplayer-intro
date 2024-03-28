@@ -111,7 +111,7 @@ limitations under the License. -->
             android:gravity="center"
             android:text="0"
             android:textColor="@color/text_color"
-            android:textSize="55sp"
+            android:textSize="35sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"></TextView>
 

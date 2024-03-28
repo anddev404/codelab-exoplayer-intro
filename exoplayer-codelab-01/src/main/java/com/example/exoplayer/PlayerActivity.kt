@@ -60,7 +60,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private var player: Player? = null
     private var activity: Activity = this
     val i = ItemPlayer(playerInterface = this)
-
+    var totalTime = 0
     private var playWhenReady = true
     private var mediaItemIndex = 0
     private var playbackPosition = 0L
@@ -102,6 +102,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
             } else {
                 i.leftSet()
                 header.text = i.description
+                totalTime = i.getTotalTime()
+
             }
 
         }
@@ -111,6 +113,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
             } else {
                 i.rightSet()
                 header.text = i.description
+                totalTime = i.getTotalTime()
+
             }
         }
         time_break = findViewById(R.id.time_break)
@@ -135,6 +139,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
         }
         Log.d("MARCIN_W", "START");
+        totalTime = i.getTotalTime()
     }
 
     public override fun onStart() {
@@ -306,7 +311,9 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
 
         //   "BREAK $seconds"
 
-        time_all.text = "" + secondsToMinutesAndSeconds(secondAllAll)
+        time_all.text = "" + secondsToMinutesAndSeconds(secondAllAll) + "\n${
+            secondsToMinutesAndSeconds(totalTime)
+        }"
 
     }
 
