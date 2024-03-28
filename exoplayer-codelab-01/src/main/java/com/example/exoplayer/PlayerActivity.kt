@@ -155,7 +155,6 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     public override fun onStart() {
         super.onStart()
         if (Build.VERSION.SDK_INT > 23) {
-            //   initializePlayer()
         }
     }
 
@@ -167,33 +166,38 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         Log.d("MARCIN_W", "resumeeee 33333333");
 
         if (Build.VERSION.SDK_INT <= 23 || player == null) {
-            //initializePlayer()
+
+            //  i.resume()
+
             Log.d("MARCIN_W", "resumeeee 444444");
 
         }
+        pauseButton.performClick()
         Log.d("MARCIN_W", "resumeeee 55555555");
 
-        // i.resume()
         Log.d("MARCIN_W", "resumeeee 666666666");
 
         //timerIsWorking = true
         Log.d("MARCIN_W", "resumeeee 111111");
-
+        //  pauseButton.performClick()
     }
 
     public override fun onPause() {
         super.onPause()
         if (Build.VERSION.SDK_INT <= 23) {
-            releasePlayer()
+            // releasePlayer()
         }
-        i.pause()
-        timerIsWorking = false
+        pauseButton.performClick()
+        // i.pause()
+        // timerIsWorking = false
+        //    pauseButton.performClick()
+
     }
 
     public override fun onStop() {
         super.onStop()
         if (Build.VERSION.SDK_INT > 23) {
-            releasePlayer()
+            // releasePlayer()
         }
     }
 
@@ -217,7 +221,11 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         }
     }
 
+    var actualItem: Item? = null
+
     override fun nextItem(item: Item) {
+        actualItem = item
+
         if (item.type is Break) {
             Log.d("MARCIN_W", "start item ${item.type.resource}");
 
