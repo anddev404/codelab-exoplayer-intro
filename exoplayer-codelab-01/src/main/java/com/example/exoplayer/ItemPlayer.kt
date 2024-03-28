@@ -24,9 +24,12 @@ class ItemPlayer(
         coroutineScope.launch() {
             playerInterface.startPlayer()
             for (item in items) {
+
                 playerInterface.nextItem(item)
-                for (i in 0..item.timeInSec) {
-                    playerInterface.second(i, item.timeInSec, timer)
+
+
+                for (x in 0..item.timeInSec) {
+                    playerInterface.second(item.timeInSec - x, item.timeInSec, timer)
                     timer++
                     while (isPaused) {
 

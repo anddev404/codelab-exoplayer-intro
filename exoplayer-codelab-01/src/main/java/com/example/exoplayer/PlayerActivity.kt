@@ -34,6 +34,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.exoplayer.databinding.ActivityPlayerBinding
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -44,6 +45,9 @@ import kotlinx.coroutines.launch
  * A fullscreen activity to play audio or video streams.
  */
 class PlayerActivity : AppCompatActivity(), PlayerInterface {
+
+//region variables
+
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         ActivityPlayerBinding.inflate(layoutInflater)
@@ -65,6 +69,16 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private var timerIsWorking = false
     private var timer = 0
 
+    //endregion
+
+
+    fun start() {
+        timerIsWorking = true
+        i.start()
+
+    }
+
+    //region onMetody
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
@@ -93,23 +107,11 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         Log.d("MARCIN_W", "START");
     }
 
-    fun start() {
-        timerIsWorking = true
-        i.start()
-
-    }
-
     public override fun onStart() {
         super.onStart()
         if (Build.VERSION.SDK_INT > 23) {
-            initializePlayer()
+            //   initializePlayer()
         }
-    }
-
-    fun secondsToMinutesAndSeconds(seconds: Int): String {
-        val minutes = seconds / 60
-        val remainingSeconds = seconds % 60
-        return String.format("%d:%02d", minutes, remainingSeconds)
     }
 
     public override fun onResume() {
@@ -120,13 +122,13 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         Log.d("MARCIN_W", "resumeeee 33333333");
 
         if (Build.VERSION.SDK_INT <= 23 || player == null) {
-            initializePlayer()
+            //initializePlayer()
             Log.d("MARCIN_W", "resumeeee 444444");
 
         }
         Log.d("MARCIN_W", "resumeeee 55555555");
 
-        i.resume()
+        // i.resume()
         Log.d("MARCIN_W", "resumeeee 666666666");
 
         timerIsWorking = true
@@ -150,28 +152,79 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         }
     }
 
-    private fun initializePlayer() {
-        // ExoPlayer implements the Player interface
+//endregion
+
+    private fun playExoPlayer(raw: Int) {
+        Log.d("MARCIN_W", "EXO PALAY: $raw");
+
         player = ExoPlayer.Builder(this).build().also { exoPlayer ->
             viewBinding.videoView.player = exoPlayer
+            Log.d("MARCIN_W", "EXO PALAY: OLSO");
 
-            var qwe1 = RawResourceDataSource.buildRawResourceUri(R.raw.youtube)
-            var qwe2 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
-
-            exoPlayer.videoScalingMode
-            //  val mediaItem = MediaItem.fromUri(pattt)
+            var qwe1 = RawResourceDataSource.buildRawResourceUri(raw)
             val mediaItem1 = MediaItem.fromUri(qwe1)
-            val mediaItem2 = MediaItem.fromUri(qwe2)
-
-//                val basePath = Environment.getExternalStorageDirectory().absolutePath
-//                val filePath = "file://$basePath/workout/internet.mp4"
-//                val mediaItem = MediaItem.fromUri(filePath)
             exoPlayer.setMediaItems(
-                listOf(mediaItem1, mediaItem2), mediaItemIndex, playbackPosition
+                listOf(mediaItem1), mediaItemIndex, playbackPosition
             )
             exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
-//                exoPlayer.playWhenReady = playWhenReady
+            exoPlayer.playWhenReady = playWhenReady
             exoPlayer.prepare()
+        }
+    }
+
+//    private fun initializePlayer() {
+//        // ExoPlayer implements the Player interface
+//        player = ExoPlayer.Builder(this).build().also { exoPlayer ->
+//            viewBinding.videoView.player = exoPlayer
+//
+//            var qwe1 = RawResourceDataSource.buildRawResourceUri(R.raw.youtube)
+//            var qwe2 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
+//            var qwe3 = RawResourceDataSource.buildRawResourceUri(R.raw.youtube)
+//            var qwe4 = RawResourceDataSource.buildRawResourceUri(R.raw.internet)
+//            exoPlayer.videoScalingMode
+//            //  val mediaItem = MediaItem.fromUri(pattt)
+//            val mediaItem1 = MediaItem.fromUri(qwe1)
+//            val mediaItem2 = MediaItem.fromUri(qwe2)
+//            val mediaItem3 = MediaItem.fromUri(qwe3)
+//            val mediaItem4 = MediaItem.fromUri(qwe4)
+//            exoPlayer.setMediaItems(
+//                listOf(mediaItem1, mediaItem2, mediaItem3, mediaItem4),
+//                mediaItemIndex,
+//                playbackPosition
+//            )
+//            exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
+//            // exoPlayer.playWhenReady = playWhenReady
+//            exoPlayer.prepare()
+//        }
+//    }
+
+    override fun nextItem(item: Item) {
+        if (item.type is Break) {
+            Log.d("MARCIN_W", "start item ${item.type.resource}");
+
+        }
+        header.text = item.name
+//        if(item.type is Workout){działą
+//            item.type.
+//        }
+        when (item.type) {//to nei jest comprehensiv tzn jak nie mam wszytrkich typów tu to nei zapyta i nei wymusi
+            is Break -> {
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    releasePlayer()
+                    playExoPlayer(item.type.resource)
+                }
+            }
+
+//            is Break -> {
+//                nextItem?.let {
+//                    if (nextItem.type is Workout) {
+//                        CoroutineScope(Dispatchers.Main).launch {
+//                            playExoPlayer(nextItem.type.resource)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -199,10 +252,6 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         Log.d("MARCIN_W", "start player");
     }
 
-    override fun nextItem(item: Item) {
-        Log.d("MARCIN_W", "start item");
-        header.text = item.name
-    }
 
     override fun endPlayer() {
         Log.d("MARCIN_W", "end player");
@@ -213,16 +262,28 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     override fun second(seconds: Int, secondAll: Int, secondAllAll: Int) {
         Log.d("MARCIN_W", "second: $seconds / $secondAll");
         time.text =
-            "" + "${secondsToMinutesAndSeconds(seconds)}\n${secondsToMinutesAndSeconds(secondAll)}"
+            "" + "${secondsToMinutesAndSeconds(seconds)}"
         time_all.text = "" + secondsToMinutesAndSeconds(secondAllAll)
 
     }
 
     override fun pause() {
         Log.d("MARCIN_W", "paused");
+        CoroutineScope(Dispatchers.Main).launch {
+            player?.pause()
+        }
     }
 
     override fun resume() {
         Log.d("MARCIN_W", "resumed");
+        CoroutineScope(Dispatchers.Main).launch {
+            player?.play()
+        }
+    }
+
+    fun secondsToMinutesAndSeconds(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format("%d:%02d", minutes, remainingSeconds)
     }
 }
