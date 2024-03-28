@@ -98,34 +98,23 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         left.setOnClickListener {
             Log.d("MARCIN_WWW", "left");
 
-            if (timerIsWorking) {
-                Log.d("MARCIN_WWW", "nextitem");
-
-                i.moveToNextItem()
-            } else {
-                Log.d("MARCIN_WWW", "set left");
-
-                i.leftSet()
-                header.text = i.description
-                totalTime = i.getTotalTime()
-
-            }
+            i.leftSet()
+            header.text = i.description
+            totalTime = i.getTotalTime()
 
         }
         right.setOnClickListener {
             Log.d("MARCIN_WWW", "right");
 
-            if (timerIsWorking) {
-                Log.d("MARCIN_WWW", "nextitem");
-                i.moveToNextItem()
-            } else {
-                Log.d("MARCIN_WWW", "set right");
+            i.rightSet()
+            header.text = i.description
+            totalTime = i.getTotalTime()
 
-                i.rightSet()
-                header.text = i.description
-                totalTime = i.getTotalTime()
 
-            }
+        }
+        time_all.setOnClickListener {
+            i.moveToNextItem()
+
         }
         time_break = findViewById(R.id.time_break)
         time_break.visibility = View.INVISIBLE
@@ -155,6 +144,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     public override fun onStart() {
         super.onStart()
         if (Build.VERSION.SDK_INT > 23) {
+            // i.resume()
         }
     }
 
