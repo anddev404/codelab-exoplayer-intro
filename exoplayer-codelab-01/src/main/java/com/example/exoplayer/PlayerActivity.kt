@@ -17,10 +17,12 @@ package com.example.exoplayer
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -28,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -39,6 +42,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @UnstableApi
 /**
@@ -63,6 +67,7 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private lateinit var time: TextView
     private lateinit var time_all: TextView
     private lateinit var header: TextView
+    private lateinit var time_break: TextView
 
     private lateinit var startButton: Button
     private lateinit var pauseButton: Button
@@ -85,6 +90,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         time = findViewById(R.id.time)
         time_all = findViewById(R.id.time_all)
         header = findViewById(R.id.header)
+        time_break = findViewById(R.id.time_break)
+        time_break.visibility = View.INVISIBLE
 
         startButton = findViewById(R.id.start)
         pauseButton = findViewById(R.id.pause)
@@ -211,10 +218,13 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
             is Break -> {
 
                 CoroutineScope(Dispatchers.Main).launch {
+                    time_break.visibility = View.VISIBLE
                     releasePlayer()
                     playExoPlayer(item.type.resource)
                 }
             }
+
+            is Workout -> time_break.visibility = View.INVISIBLE
 
 //            is Break -> {
 //                nextItem?.let {
@@ -263,6 +273,16 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         Log.d("MARCIN_W", "second: $seconds / $secondAll");
         time.text =
             "" + "${secondsToMinutesAndSeconds(seconds)}"
+
+
+        runBlocking(Dispatchers.Main) {
+            time_break.text = "BREAK ${seconds}"
+
+        }
+
+
+        //   "BREAK $seconds"
+
         time_all.text = "" + secondsToMinutesAndSeconds(secondAllAll)
 
     }
@@ -285,5 +305,10 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         val minutes = seconds / 60
         val remainingSeconds = seconds % 60
         return String.format("%d:%02d", minutes, remainingSeconds)
+    }
+
+    fun aaa(seconds: Int): String {
+
+        return Integer.toString(seconds)
     }
 }
