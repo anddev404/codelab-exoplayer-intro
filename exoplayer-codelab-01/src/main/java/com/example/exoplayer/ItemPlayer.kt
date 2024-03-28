@@ -2,28 +2,39 @@ package com.example.exoplayer
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 
 class ItemPlayer(
-    private val items: List<Item> = Item.getExampleItem(),
+    private var items: Pair<List<Item>, String> = Item.getAllSets().getNext(),
     private val playerInterface: PlayerInterface
 ) {
     private var isPaused = false
     private var isStarted = false
     private var timer = 0
+    var description = items.second
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
+
     //   val mutex = Mutex(locked = false)
+    fun rightSet() {
+        val item = Item.getAllSets().getNext()
+        items = item
+        description = item.second
+    }
+
+    fun leftSet() {
+        val item = Item.getAllSets().getPrevious()
+        items = item
+        description = item.second
+    }
 
     fun start() {
         if (isStarted) return
         isStarted = true
         coroutineScope.launch() {
             playerInterface.startPlayer()
-            for (item in items) {
+            for (item in items.first) {
 
                 playerInterface.nextItem(item)
 

@@ -66,6 +66,8 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
     private var playbackPosition = 0L
     private lateinit var time: TextView
     private lateinit var time_all: TextView
+    private lateinit var left: TextView
+    private lateinit var right: TextView
     private lateinit var header: TextView
     private lateinit var time_break: TextView
 
@@ -89,7 +91,19 @@ class PlayerActivity : AppCompatActivity(), PlayerInterface {
         setContentView(viewBinding.root)
         time = findViewById(R.id.time)
         time_all = findViewById(R.id.time_all)
+        left = findViewById(R.id.left)
+        right = findViewById(R.id.right)
+
         header = findViewById(R.id.header)
+        header.text = i.description
+        left.setOnClickListener {
+            i.leftSet()
+            header.text = i.description
+        }
+        right.setOnClickListener {
+            i.rightSet()
+            header.text = i.description
+        }
         time_break = findViewById(R.id.time_break)
         time_break.visibility = View.INVISIBLE
 

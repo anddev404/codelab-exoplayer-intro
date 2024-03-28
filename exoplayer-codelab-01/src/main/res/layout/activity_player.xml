@@ -35,9 +35,22 @@ limitations under the License. -->
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/left"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/gray"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            app:layout_constraintRight_toLeftOf="@id/header"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
+
+        <TextView
             android:id="@+id/header"
-            android:layout_width="400dp"
-            android:layout_height="wrap_content"
+            android:layout_width="340dp"
+            android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:background="@color/gray"
             android:gravity="center"
@@ -49,15 +62,28 @@ limitations under the License. -->
             app:layout_constraintTop_toTopOf="parent"></TextView>
 
         <TextView
+            android:id="@+id/right"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/gray"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="@id/header"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
+
+        <TextView
             android:id="@+id/time_break"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:layout_marginTop="20dp"
             android:background="@color/szary"
             android:padding="15dp"
-            app:layout_constraintHorizontal_bias="0.35"
             android:textColor="@color/green"
             android:textSize="50sp"
+            app:layout_constraintHorizontal_bias="0.35"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/header"></TextView>
@@ -85,7 +111,7 @@ limitations under the License. -->
             android:gravity="center"
             android:text="0"
             android:textColor="@color/text_color"
-            android:textSize="35sp"
+            android:textSize="55sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"></TextView>
 
